@@ -1,0 +1,25 @@
+package com.joancesar.pricecatalogservice.service;
+
+import com.joancesar.pricecatalogservice.domain.ApplicablePriceDomain;
+import com.joancesar.pricecatalogservice.domain.PriceCalculation;
+import com.joancesar.pricecatalogservice.output.PriceRepositoryPort;
+import com.joancesar.pricecatalogservice.usecase.GetPriceUseCase;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service
+public class GetPriceUseCaseImpl implements GetPriceUseCase {
+
+    private final PriceRepositoryPort priceRepositoryPort;
+
+    public GetPriceUseCaseImpl(PriceRepositoryPort priceRepositoryPort) {
+        this.priceRepositoryPort = priceRepositoryPort;
+    }
+
+    @Override
+    public Optional<ApplicablePriceDomain> getPrice(PriceCalculation priceCalculation) {
+        return priceRepositoryPort.findApplicablePrice(priceCalculation.product().id(),
+                        priceCalculation.brand().id(), priceCalculation.date());
+    }
+}
