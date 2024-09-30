@@ -1,14 +1,8 @@
 package com.joancesar.pricecatalogservice.domain;
 
-import com.joancesar.pricecatalogservice.exceptions.DomainException;
+import jakarta.validation.constraints.NotNull;
 
 public record Product(
-        Integer id
+        @NotNull Long id
 ) {
-
-    public Product {
-        if (id == null) {
-            throw new DomainException("Id no puede ser nulo");
-        }
-    }
 }
