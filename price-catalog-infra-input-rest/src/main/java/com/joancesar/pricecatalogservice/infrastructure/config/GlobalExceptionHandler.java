@@ -33,9 +33,9 @@ public class GlobalExceptionHandler {
             HttpMessageConversionException.class,
             HttpRequestMethodNotSupportedException.class,
             HttpMediaTypeException.class, InvalidFormatException.class})
-    public ResponseEntity<ErrorDTO> handleUnprocessableRequestException(Exception ex, HttpServletRequest request) {
-        return buildErrorResponse(ex, request.getRequestURI(), HttpStatus.UNPROCESSABLE_ENTITY,
-                ErrorDTO.ErrorCodeEnum.UNPROCESSABLE_REQUEST);
+    public ResponseEntity<ErrorDTO> handleBadRequestException(Exception ex, HttpServletRequest request) {
+        return buildErrorResponse(ex, request.getRequestURI(), HttpStatus.BAD_REQUEST,
+                ErrorDTO.ErrorCodeEnum.BAD_REQUEST);
     }
 
     @ExceptionHandler(Exception.class)

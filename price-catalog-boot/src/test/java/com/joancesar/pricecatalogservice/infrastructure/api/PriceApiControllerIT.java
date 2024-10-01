@@ -6,6 +6,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -24,8 +26,8 @@ class PriceApiControllerIT {
         long brandId = 1L;
         String appliedDate = "2020-06-14 10:00:00";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.brandId").value(brandId))
@@ -42,8 +44,8 @@ class PriceApiControllerIT {
         long brandId = 1L;
         String appliedDate = "2020-06-14 16:00:00";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.brandId").value(brandId))
@@ -60,8 +62,8 @@ class PriceApiControllerIT {
         long brandId = 1L;
         String appliedDate = "2020-06-14 21:00:00";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.brandId").value(brandId))
@@ -78,8 +80,8 @@ class PriceApiControllerIT {
         long brandId = 1L;
         String appliedDate = "2020-06-15 10:00:00";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.brandId").value(brandId))
@@ -96,8 +98,8 @@ class PriceApiControllerIT {
         long brandId = 1L;
         String appliedDate = "2020-06-16 21:00:00";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.brandId").value(brandId))
@@ -114,8 +116,8 @@ class PriceApiControllerIT {
         long brandId = 1L;
         String appliedDate = "2023-06-16 21:00:00";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("RESOURCE_NOT_FOUND"))
@@ -128,7 +130,7 @@ class PriceApiControllerIT {
         long brandId = 99L;
         String appliedDate = "2020-06-14 10:00:00";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
-                        .param("date", appliedDate))
+                .param("date", appliedDate))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
                 .andExpect(jsonPath("$.errorCode").value("RESOURCE_NOT_FOUND"))
@@ -136,41 +138,84 @@ class PriceApiControllerIT {
     }
 
     @Test
-    void whenGetPriceWithInvalidDateFormatThenReturnsUnprocessable() throws Exception {
+    void whenGetPriceWithInvalidDateFormatThenReturnsBadRequest() throws Exception {
         long productId = 35455L;
         long brandId = 1L;
         String appliedDate = "fakeString";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity())
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errorCode").value("UNPROCESSABLE_REQUEST"))
-                .andExpect(jsonPath("$.status").value("UNPROCESSABLE_ENTITY"));
+                .andExpect(jsonPath("$.errorCode").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
 
     @Test
-    void whenGetPriceWithInvalidProductIdFormatThenReturnsUnprocessable() throws Exception {
+    void whenGetPriceWithInvalidProductIdFormatThenReturnsBadRequest() throws Exception {
         long brandId = 1L;
         String appliedDate = "2020-06-14 10:00:00";
         mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + "productId" + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity())
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errorCode").value("UNPROCESSABLE_REQUEST"))
-                .andExpect(jsonPath("$.status").value("UNPROCESSABLE_ENTITY"));
+                .andExpect(jsonPath("$.errorCode").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
+
     @Test
-    void whenGetPriceWithInvalidBrandIdFormatThenReturnsUnprocessable() throws Exception {
+    void whenGetPriceWithInvalidBrandIdFormatThenReturnsBadRequest() throws Exception {
         long productId = 35455L;
         String appliedDate = "2020-06-14 10:00:00";
         mockMvc.perform(get("/v1/brands/" + "brandId" + "/products/" + productId + "/prices")
-                        .param("date", appliedDate)
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isUnprocessableEntity())
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest())
                 .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
-                .andExpect(jsonPath("$.errorCode").value("UNPROCESSABLE_REQUEST"))
-                .andExpect(jsonPath("$.status").value("UNPROCESSABLE_ENTITY"));
+                .andExpect(jsonPath("$.errorCode").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
+    }
+
+    @Test
+    void whenGetPriceWithInvalidBrandIdThenReturnsBadRequest() throws Exception {
+        String productId = "35455";
+        String brandId = "a";
+        String appliedDate = "2020-06-14 10:00:00";
+        mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
+    }
+
+    @Test
+    void whenGetPriceWithInvalidDateThenReturnsBadRequest() throws Exception {
+        long productId = 35455L;
+        long brandId = 1L;
+        String appliedDate = "22020-06-14%2010:00:00";
+        mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
+                .param("date", appliedDate)
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
+    }
+
+    @Test
+    void whenGetPriceWithoutDateThenReturnsBadRequest() throws Exception {
+        long productId = 35455L;
+        long brandId = 1L;
+        mockMvc.perform(get("/v1/brands/" + brandId + "/products/" + productId + "/prices")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(status().isBadRequest())
+                .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.errorCode").value("BAD_REQUEST"))
+                .andExpect(jsonPath("$.status").value("BAD_REQUEST"));
     }
 }

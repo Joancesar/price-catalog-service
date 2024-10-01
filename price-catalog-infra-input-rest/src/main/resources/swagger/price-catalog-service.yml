@@ -39,14 +39,14 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PriceDTO'
-        '404':
-          description: Price not found
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-        '422':
-          description: Unprocessable request
+        '404':
+          description: Price not found
           content:
             application/json:
               schema:
@@ -94,7 +94,7 @@ components:
           enum:
             - RESOURCE_NOT_FOUND
             - INTERNAL_SERVER_ERROR
-            - UNPROCESSABLE_REQUEST
+            - BAD_REQUEST
           description: Type of the error
         errorMessage:
           type: string

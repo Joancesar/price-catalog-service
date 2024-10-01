@@ -313,7 +313,7 @@ Endpoints de la API
 *   **Respuesta:**
     *   `200 OK` - Devuelve el precio aplicable
     *   `404 Not Found` - Si no se encuentra un precio aplicable
-    *   `422 Unprocessable Entity` - Si el formato de la fecha es inválido
+    *   `400 Bad Request` - Si el formato de la fecha es inválido
 
 #### Ejemplo de Solicitud
 
