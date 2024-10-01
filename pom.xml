@@ -22,6 +22,7 @@
         <module>price-catalog-infra-input-rest</module>
         <module>price-catalog-boot</module>
         <module>price-catalog-acceptance-tests</module>
+        <module>price-catalog-infra-output-cache</module>
     </modules>
     <scm>
         <connection/>
