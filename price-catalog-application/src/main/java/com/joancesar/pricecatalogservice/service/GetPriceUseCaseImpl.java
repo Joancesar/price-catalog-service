@@ -19,7 +19,8 @@ public class GetPriceUseCaseImpl implements GetPriceUseCase {
 
     @Override
     public Optional<ApplicablePriceDomain> getPrice(PriceCalculation priceCalculation) {
-        return priceRepositoryPort.findApplicablePrice(priceCalculation.product().id(),
-                        priceCalculation.brand().id(), priceCalculation.date());
+        return priceRepositoryPort.findApplicablePrices(priceCalculation.product().id(),
+                        priceCalculation.brand().id(), priceCalculation.date())
+                .stream().max(ApplicablePriceDomain::compareByPriority);
     }
 }

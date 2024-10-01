@@ -14,5 +14,6 @@ public interface PriceMapper {
     @Mapping(target = "priceRate.dateRange.endDate", source = "endDate")
     @Mapping(target = "priceRate.price", source = "price")
     @Mapping(target = "priceRate.priceList", source = "priceList")
+    @Mapping(target = "priority", source = "priority")
     ApplicablePriceDomain toDomain(ApplicablePriceProjection applicablePriceProjection);
 }

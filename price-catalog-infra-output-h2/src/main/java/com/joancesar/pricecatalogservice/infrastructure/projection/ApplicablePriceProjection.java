@@ -9,4 +9,5 @@ public interface ApplicablePriceProjection {
     LocalDateTime getEndDate();
     BigDecimal getPrice();
     Integer getPriceList();
+    Integer getPriority();
 }

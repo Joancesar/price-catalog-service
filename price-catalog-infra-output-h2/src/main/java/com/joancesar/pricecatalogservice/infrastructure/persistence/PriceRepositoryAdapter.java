@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
+import java.util.List;
 
 @Component
 public class PriceRepositoryAdapter implements PriceRepositoryPort {
@@ -23,8 +23,8 @@ public class PriceRepositoryAdapter implements PriceRepositoryPort {
 
     @Transactional(readOnly = true)
     @Override
-    public Optional<ApplicablePriceDomain> findApplicablePrice(Long productId, Long brandId, LocalDateTime applicationDate) {
-        return jpaPriceRepository.findApplicablePrice(productId, brandId, applicationDate)
-                .map(priceMapper::toDomain);
+    public List<ApplicablePriceDomain> findApplicablePrices(Long productId, Long brandId, LocalDateTime applicationDate) {
+        return jpaPriceRepository.findApplicablePrices(productId, brandId, applicationDate)
+                .stream().map(priceMapper::toDomain).toList();
     }
 }

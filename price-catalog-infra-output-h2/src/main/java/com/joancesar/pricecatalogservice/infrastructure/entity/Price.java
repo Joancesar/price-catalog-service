@@ -43,7 +43,7 @@ public class Price {
     private LocalDateTime endDate;
 
     @Column(name = "priority")
-    private int priority;
+    private Integer priority;
 
     @Column(name = "price")
     private BigDecimal price;
