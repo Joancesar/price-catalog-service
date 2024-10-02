@@ -4,8 +4,8 @@ import com.joancesar.pricecatalogservice.domain.ApplicablePriceDomain;
 import com.joancesar.pricecatalogservice.infrastructure.mapper.PriceMapper;
 import com.joancesar.pricecatalogservice.infrastructure.repository.JpaPriceRepository;
 import com.joancesar.pricecatalogservice.output.PriceRepositoryPort;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,7 +21,7 @@ public class PriceRepositoryAdapter implements PriceRepositoryPort {
         this.priceMapper = priceMapper;
     }
 
-    @Transactional(readOnly = true)
+    @Cacheable(value = "prices")
     @Override
     public List<ApplicablePriceDomain> findApplicablePrices(Long productId, Long brandId, LocalDateTime applicationDate) {
         return jpaPriceRepository.findApplicablePrices(productId, brandId, applicationDate)
