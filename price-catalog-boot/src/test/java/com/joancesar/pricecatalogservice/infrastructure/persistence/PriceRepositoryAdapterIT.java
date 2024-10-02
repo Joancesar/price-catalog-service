@@ -8,10 +8,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import org.junit.jupiter.api.Test;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.SpyBean;
+import org.springframework.cache.CacheManager;
 
 import com.joancesar.pricecatalogservice.domain.ApplicablePriceDomain;
+import com.joancesar.pricecatalogservice.infrastructure.repository.JpaPriceRepository;
 
 @SpringBootTest
 class PriceRepositoryAdapterIT {
@@ -19,6 +24,12 @@ class PriceRepositoryAdapterIT {
     @Autowired
     private PriceRepositoryAdapter priceRepository;
     private final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+    @SpyBean
+    private JpaPriceRepository jpaPriceRepository;
+
+    @Autowired
+    private CacheManager cacheManager;
 
     @Test
     void whenFindApplicablePricesCalledWithExistingDataThenPricesAreReturned() {
@@ -30,6 +41,22 @@ class PriceRepositoryAdapterIT {
         assertFalse(result.isEmpty());
         assertEquals(brandId, result.getFirst().brand().id());
         assertEquals(productId, result.getFirst().product().id());
+    }
+
+    @Test
+    void whenFindApplicablePricesCalled_thenResultShouldBeCached() {
+        cacheManager.getCache("prices").clear();
+        long productId = 35455L;
+        long brandId = 1L;
+        LocalDateTime appliedDate = LocalDateTime.parse("2020-06-14 10:00:00", formatter);
+
+        List<ApplicablePriceDomain> firstCall = priceRepository.findApplicablePrices(productId, brandId, appliedDate);
+        assertFalse(firstCall.isEmpty());
+
+        List<ApplicablePriceDomain> secondCall = priceRepository.findApplicablePrices(productId, brandId, appliedDate);
+        assertEquals(firstCall, secondCall);
+
+        verify(jpaPriceRepository, times(1)).findApplicablePrices(productId, brandId, appliedDate);
     }
 
     @Test
